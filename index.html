@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSchool - Sistema Integrado de Gestão Acadêmica</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Tela de login -->
+
+    <div class="system-frame">
+
+        <div class="login-overlay" id="loginScreen">
+            <div class="login-card">
+                <img src="tela-login.png" alt="ConnectSchool">
+            
+                <input type="text" class="login-field" id="inputLoginInst" value="ConnectSchool Unidade Matriz">
+                <input type="text" class="login-field" id="inputLoginMatr" value="ADM-2026">
+                <input type="password" class="login-field" id="inputLoginSenha" value="admin123">
+                <button class="login-submit-btn" onclick="autenticarEEntrar()">Entrar</button>
+            
+            </div>
+        </div>
+
+<!-- Estrutura principal da interface após login -->
+
+        <div class="sidebar-container">
+            <div class="sidebar-brand">
+            <img src="Connecting.png" alt="ConnectSchool">
+            </div>
+            <ul class="sidebar-navigation">
+                <li><button class="sidebar-link active" id="menuAdmin" onclick="redirecionarContexto('Administração')">Administração</button></li>
+                <li><button class="sidebar-link" id="menuDocente" onclick="redirecionarContexto('Docente')">Docente</button></li>
+                <li><button class="sidebar-link" id="menuDiscente" onclick="redirecionarContexto('Discente')">Discente</button></li>
+                <li><button class="sidebar-link" id="menuGuardiao" onclick="redirecionarContexto('Guardião')">Responsável</button></li>
+
+            </ul>
+        </div>
+
+<!-- Área de trabalho principal onde os conteúdos são renderizados dinamicamente -->
+
+        <div class="workspace-viewport">
+            
+            <div class="context-tabs-bar" id="contextTabsBar">
+                </div>
+
+            <div class="workspace-content">
+                
+                <div id="panelCadastros" class="view-segment">
+                    <div class="app-card-layout">
+                        <div class="sub-tabs-row" id="cadastrosSubTabs">
+                            <button class="sub-tab-pill active" onclick="alterarSubPerfilCadastro('Administrador')">Administrador</button>
+                            <button class="sub-tab-pill" onclick="alterarSubPerfilCadastro('Docente')">Docente</button>
+                            <button class="sub-tab-pill" onclick="alterarSubPerfilCadastro('Discente')">Discente</button>
+                            <button class="sub-tab-pill" onclick="alterarSubPerfilCadastro('Guardião')">Responsável</button>
+
+                        </div>
+                        <div class="ui-divider"></div>
+                        
+                        <form class="standard-form" id="mainUserForm" onsubmit="event.preventDefault(); submeterFormularioUsuario();">
+                            <div class="form-row-item"><label>Nome Completo:</label><input type="text" id="usrNome" value="Mateus Alencar"></div>
+                            <div class="form-row-item"><label>CPF:</label><input type="text" id="usrCpf" value="600.700.800-99"></div>
+                            <div class="form-row-item"><label>Data de nasc.:</label><input type="date" id="usrNasc" value="1992-07-18"></div>
+                            <div class="form-row-item"><label>Matrícula (id):</label><input type="text" id="usrMatr" value="MATR-Auto" readonly></div>
+                            <div class="form-row-item"><label>Senha Acesso:</label><input type="password" id="usrSenha" value="inicial123"></div>
+                            <div class="form-row-item">
+                                <label>Status (Ativo/Inativo):</label>
+                                <select id="usrStatus"><option value="true">Ativo</option><option value="false">Inativo</option></select>
+                            </div>
+
+                            <div id="rowAdminFields" class="subclass-fields-block">
+                                <div class="form-row-item"><label>Função/Cargo:</label><input type="text" id="attrCargo" value="Coordenador Pedagógico"></div>
+                            </div>
+                            <div id="rowDocenteFields" class="subclass-fields-block hidden">
+                                <div></div>
+                            </div>
+                            <div id="rowDiscenteFields" class="subclass-fields-block hidden">
+                                <div class="form-row-item"><label>Grau Regular:</label><select id="attrGrau"><option>Ensino Médio</option><option>Ensino Fundamental</option></select></div>
+                                <div class="form-row-item"><label>Ano Letivo:</label><input type="number" id="attrAno" value="1"></div>
+                            </div>
+                            <div id="rowGuardiaoFields" class="subclass-fields-block hidden">
+                                <div class="form-row-item"><label>Telefone 1:</label><input type="number" id="attrTel1" value="8699991111"></div>
+                                <div class="form-row-item"><label>Telefone 2:</label><input type="number" id="attrTel2" value="8699992222"></div>
+                            </div>
+
+                            <div class="form-buttons-end">
+                                <button type="button" class="btn-system-action" onclick="acionarMetodoHerdado('visualizar')">visualizarPerfil()</button>
+                                <button type="submit" class="btn-system-action" style="background-color: var(--btn-dark); color: white;">Cadastrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+<!-- Segmento de controle acadêmico para gestão de disciplinas e turmas, com sub-abas dinâmicas -->
+
+                <div id="panelDisciplinas" class="view-segment hidden">
+                    <div class="app-card-layout">
+                        <div class="search-control-block">
+                            <input type="text" class="search-bar-input" placeholder="Pesquisar Disciplinas 🔍">
+                        </div>
+                        <div class="data-grid-flex">
+                            <div class="grid-table-frame">
+                                <table class="app-data-table">
+                                    <thead><tr><th>Cod</th><th>Descrição</th><th>Status</th></tr></thead>
+                                    <tbody id="tableDisciplinasRows"></tbody>
+                                </table>
+                            </div>
+                            <div class="grid-vertical-actions">
+                                <button class="btn-vertical-control" style="background-color: #ccc; font-weight: bold;">Cadastrar Disciplinas</button>
+                                <button class="btn-vertical-control" onclick="adminRemoverDisciplina()">Remover Disciplina</button>
+                                <button class="btn-vertical-control" onclick="alert('Selecione uma linha da tabela para editar os atributos.')">Editar Disciplina</button>
+                                <button class="btn-vertical-control" onclick="adminMudarStatusDisciplina(false)">Desativar Disciplina</button>
+                                <button class="btn-vertical-control" onclick="adminMudarStatusDisciplina(true)">Ativar Disciplina</button>
+                            </div>
+                        </div>
+
+                        <div class="embedded-insert-panel">
+                            <div class="standard-form" style="max-width: 100%;">
+                                <div class="form-row-item"><label>Código:</label><input type="text" id="formDiscCod" value="005"></div>
+                                <div class="form-row-item"><label>Descrição:</label><input type="text" id="formDiscDesc" value="História do Brasil"></div>
+                                <div class="form-row-item"><label>Status:</label><input type="text" id="formDiscStatus" value="ATIVO" readonly></div>
+                                <div class="form-row-item"><label>Ementa:</label><textarea id="formDiscEmenta" rows="1">Análise do Brasil Colônia ao Império.</textarea></div>
+                                <div class="form-buttons-end"><button class="btn-system-action" onclick="adminCadastrarDisciplina()">Cadastrar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<!-- Painel de Turmas -->                
+
+                <div id="panelTurmas" class="view-segment hidden">
+                    <div class="app-card-layout">
+                        <div class="search-control-block"><div style="font-size:12px; font-weight:bold; color:#444;">Filtro Dinâmico: Listagem de Classes</div></div>
+                        <div class="data-grid-flex">
+                            <div class="grid-table-frame">
+                                <table class="app-data-table">
+                                    <thead><tr><th>Cod</th><th>Curso</th><th>Semestre</th><th>Qtd. Alunos</th><th>Status</th></tr></thead>
+                                    <tbody id="tableTurmasRows"></tbody>
+                                </table>
+                            </div>
+                            <div class="grid-vertical-actions">
+                                <button class="btn-vertical-control" style="background-color: #ccc; font-weight: bold;">Criar Turma</button>
+                                <button class="btn-vertical-control" onclick="alert('Modificar parâmetros estruturais da turma.')">Alterar Turma</button>
+                                <button class="btn-vertical-control" onclick="adminFecharTurma()">Fechar Turma</button>
+                            </div>
+                        </div>
+
+<!-- Painel de Inserção de Turma -->
+
+                        <div class="embedded-insert-panel">
+                            <div class="standard-form" style="max-width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="form-row-item"><label>Curso:</label><select id="formTurmaCurso"><option>Médio I</option><option>Fundamental II</option></select></div>
+                                <div class="form-row-item"><label>Semestre:</label><input type="text" id="formTurmaSemestre" value="2026/1"></div>
+                                <div class="form-row-item"><label>Vagas (Int):</label><input type="number" id="formTurmaVagas" value="35"></div>
+                                <div class="form-row-item"><label>Disciplina (Cod):</label><input type="text" id="formTurmaDisc" value="001"></div>
+                                <div class="form-row-item" style="grid-column: span 2;"><label>Matrícula Aluno:</label><input type="text" id="formTurmaAlu" placeholder="Adicionar discente à lista..."></div>
+                                <div class="form-buttons-end" style="grid-column: span 2; margin-top: 0;"><button class="btn-system-action" onclick="adminCriarTurma()">Criar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              
+<!-- Painel de Feed de Notícias do Módulo Comercial --> 
+
+                <div id="panelFeedNoticias" class="view-segment hidden">
+                    <div class="app-card-layout">
+                        <div class="news-feed-list" id="domFeedList">
+                            </div>
+                    </div>
+                </div>
+
+                <div id="panelModuloDocente" class="view-segment hidden">
+                    <div class="app-card-layout">
+                        <h3 style="font-size: 14px; margin-bottom: 10px;">Diário de Classe Eletrônico (Métodos Operacionais)</h3>
+                        <div class="standard-form">
+                            <div class="form-row-item"><label>Selecione Aluno:</label><select id="docAluno"><option>Amanda Costa</option><option>Bruno Carvalho</option></select></div>
+                            <div class="form-row-item"><label>Nota Avaliação:</label><input type="number" id="docNota" step="0.1" value="9.0"></div>
+                            <div class="form-row-item"><label>Presenças/Faltas:</label><input type="number" id="docFaltas" value="2"></div>
+                            <div class="form-buttons-end">
+                                <button class="btn-system-action" onclick="execDocenteLancar('nota')">lançarNotas()</button>
+                                <button class="btn-system-action" onclick="execDocenteLancar('frequencia')">lançarFrequencia()</button>
+                                <button class="btn-system-action" onclick="alert('Turmas Ativas vinculadas ao ID Docente extraídas da memória.')">visualizarTurmas()</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<!-- Painel do Portal do Estudante com métodos operacionais de consulta de notas, frequência e boletim -->
+
+                <div id="panelModuloDiscente" class="view-segment hidden">
+                    <div class="app-card-layout">
+                        <h3 style="font-size: 14px; margin-bottom: 12px;">Portal do Estudante</h3>
+                        <div style="background: white; padding: 12px; border: 1px solid #aaa; font-size:13px; margin-bottom:10px;">
+                            <p><strong>Estudante:</strong> Bruno Carvalho | <strong>Ano Letivo:</strong> 3º Ano Regular</p>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-system-action" onclick="alert('Notas Extraídas: \nLíngua Portuguesa: 8.5\nMatemática: 7.2')">consultarNotas()</button>
+                            <button class="btn-system-action" onclick="alert('Frequência Atualizada: 96% de presença em sala de aula.')">consultarFrequencia()</button>
+                            <button class="btn-system-action" onclick="alert('Gerando espelho do Boletim em formato JSON para impressão...')">visualizarBoletim()</button>
+                        </div>
+                    </div>
+                </div>
+
+<!-- Painel do Portal do Guardião com métodos operacionais de acompanhamento de alunos vinculados e comunicados -->
+
+                <div id="panelModuloGuardiao" class="view-segment hidden">
+                    <div class="app-card-layout">
+                        <h3 style="font-size: 14px; margin-bottom: 12px;">Controle de Alunos Vinculados</h3>
+                        <div style="background: #fdfdfd; padding: 15px; border: 1px solid #999; margin-bottom: 15px;">
+                            <strong>Dependente Cadastrado:</strong> Bruno Carvalho
+                            <p style="font-size:12px; margin-top:5px; color:#555;">Telefones de Alerta: (86) 9999-1111 / (86) 9999-2222</p>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-system-action" onclick="alert('Ação acionada: Relatório comportamental unificado gerado.')">acompanharAluno()</button>
+                            <button class="btn-system-action" onclick="alert('Avisos Gerais: Reunião Pedagógica agendada para sexta-feira.')">visualizarComunicados()</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terminal-oop-logger" id="termLogger">> ConnectSchool Engine Inicializada...</div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================
+           1. COMPILAÇÃO DA ARQUITETURA DE CLASSES DO DIAGRAMA (OOP)
+*/
+        class Usuario {
+            constructor(id, nomeCompleto, cpf, dataNascimento, matricula, senha, perfil, status) {
+                this.id = id;
+                this.nomeCompleto = nomeCompleto;
+                this.cpf = cpf;
+                this.dataNascimento = dataNascimento;
+                this.matricula = matricula;
+                this.senha = senha;
+                this.perfil = perfil;
+                this.status = status === true || status === 'true';
+            }
+            alterarCadastro(novoNome) { this.nomeCompleto = novoNome; return `[Usuario] alterarCadastro executado para ID ${this.id}.`; }
+            alterarSenha(novaSenha) { this.senha = novaSenha; return `[Usuario] alterarSenha processada com sucesso.`; }
+            visualizarPerfil() { return `[Objeto Usuario]: ID: ${this.id} | Nome: ${this.nomeCompleto} | Vínculo: ${this.perfil} | Ativo: ${this.status}`; }
+        }
+
+        class Administrador extends Usuario {
+            constructor(id, nomeCompleto, cpf, dataNascimento, matricula, senha, status, cargo) {
+                super(id, nomeCompleto, cpf, dataNascimento, matricula, senha, 'Administrador', status);
+                this.cargo = cargo;
+            }
+            cadastrarUsuario(memArray, obj) { memArray.push(obj); return `[Administrador] cadastrarUsuario(): Instância carregada na memória do sistema.`; }
+            removerUsuario(memArray, id) { const idx = memArray.findIndex(u => u.id === id); if(idx !== -1) { memArray.splice(idx, 1); return `[Administrador] removerUsuario(): Removido ID ${id}.`; } return `ID inválido.`; }
+            ativarUsuario(obj) { obj.status = true; return `[Administrador] ativarUsuario(): Status alterado para true.`; }
+            desativarUsuario(obj) { obj.status = false; return `[Administrador] desativarUsuario(): Status alterado para false.`; }
+        }
+
+        class Docente extends Usuario {
+            constructor(id, nomeCompleto, cpf, dataNascimento, matricula, senha, status, disciplinas) {
+                super(id, nomeCompleto, cpf, dataNascimento, matricula, senha, 'Docente', status);
+                this.disciplinas = disciplinas;
+            }
+        }
+
+        /* =========================================================
+           2. SIMULAÇÃO DE ESTRUTURAS DE BANCO DE DADOS (MEMÓRIA)
+           ========================================================= */
+        let dbUsuarios = [
+            new Administrador(1, "Ana Coordenadora", "111.111.111-11", "1985-04-10", "ADM-01", "123", true, "Diretora"),
+            new Docente(2, "Professor Marcos", "222.222.222-22", "1979-11-23", "DOC-02", "123", true, "Matemática")
+        ];
+
+        let dbDisciplinas = [
+            { cod: "001", desc: "Língua Portuguesa", status: "ATIVO", ementa: "Gramática Teórica e Sintaxe" },
+            { cod: "002", desc: "Língua Portuguesa", status: "ATIVO", ementa: "Produção e Redação Científica" },
+            { cod: "003", desc: "Língua Portuguesa", status: "ATIVO", ementa: "Interpretação e Literatura" },
+            { cod: "004", desc: "Língua Portuguesa", status: "ATIVO", ementa: "Análise de Discurso e Semiótica" }
+        ];
+
+        let dbTurmas = [
+            { cod: "001", curso: "Fundamental I", semestre: "2026/1", qtd: 33, status: "ABERTA" },
+            { cod: "002", curso: "Fundamental II", semestre: "2026/1", qtd: 24, status: "ABERTA" },
+            { cod: "003", curso: "Fundamental II", semestre: "2026/1", qtd: 40, status: "ABERTA" },
+            { cod: "004", curso: "Médio I", semestre: "2026/1", qtd: 23, status: "ABERTA" }
+        ];
+
+        let dbFeed = [
+            { texto: "Notícias relacionadas à instituição de ensino, essas postagens são feitas pelo perfil comercial, e podem ser vistas por todos os perfis, desde o administrativo ao guardião." }
+        ];
+
+        /* =========================================================
+           3. SISTEMA DE ROTAS DA INTERFACE (MIMIC DO PDF)
+           ========================================================= */
+        let perfilCadastroSelecionado = "Administrador";
+        let contextoAtivo = "Administração";
+
+        function autenticarEEntrar() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            logOOP("Sessão autenticada pelo usuário operador ADM-2026.");
+            redirecionarContexto('Administração');
+        }
+
+        function redirecionarContexto(contexto) {
+            contextoAtivo = contexto;
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            
+            const mapLinks = {
+                'Administração': 'menuAdmin', 'Docente': 'menuDocente', 'Discente': 'menuDiscente',
+                'Guardião': 'menuGuardiao', 'Financeiro': 'menuFinanceiro', 'Comercial': 'menuComercial'
+            };
+            document.getElementById(mapLinks[contexto]).classList.add('active');
+
+            const bar = document.getElementById('contextTabsBar');
+            bar.innerHTML = '';
+
+            if (contexto === 'Administração') {
+                bar.innerHTML = `
+                    <button class="context-tab-button active" id="btnTabCad" onclick="chavearAbaAdministrativa('cadastro')">Cadastrar usuário</button>
+                    <button class="context-tab-button" id="btnTabAlt" onclick="chavearAbaAdministrativa('cadastro')">Alterar cadastro</button>
+                    <button class="context-tab-button" id="btnTabCtrl" onclick="chavearAbaAdministrativa('disciplinas')">Controle Acadêmico</button>
+                `;
+                chavearAbaAdministrativa('cadastro');
+            } else if (contexto === 'Comercial') {
+                bar.innerHTML = `<button class="context-tab-button active">Feed Notícias</button>`;
+                ocultarTodosSegmentosDOM();
+                document.getElementById('panelFeedNoticias').classList.remove('hidden');
+                desenharFeedComercial();
+            } else {
+                bar.innerHTML = `<button class="context-tab-button active">Portal Operacional: ${contexto}</button>`;
+                ocultarTodosSegmentosDOM();
+                if(contexto === 'Docente') document.getElementById('panelModuloDocente').classList.remove('hidden');
+                if(contexto === 'Discente') document.getElementById('panelModuloDiscente').classList.remove('hidden');
+                if(contexto === 'Guardião') document.getElementById('panelModuloGuardiao').classList.remove('hidden');
+            }
+            logOOP(`Contexto modificado para: [Módulo ${contexto}].`);
+        }
+
+        function chavearAbaAdministrativa(tipo) {
+            ocultarTodosSegmentosDOM();
+            document.getElementById('btnTabCad').classList.remove('active');
+            document.getElementById('btnTabAlt').classList.remove('active');
+            document.getElementById('btnTabCtrl').classList.remove('active');
+
+            if (tipo === 'cadastro') {
+                document.getElementById('btnTabCad').classList.add('active');
+                document.getElementById('panelCadastros').classList.remove('hidden');
+            } else if (tipo === 'disciplinas') {
+                document.getElementById('btnTabCtrl').classList.add('active');
+                document.getElementById('panelDisciplinas').classList.remove('hidden');
+                
+                // Adapta a barra superior mantendo sub-abas dinâmicas fiéis ao protótipo do PDF
+                document.getElementById('contextTabsBar').innerHTML = `
+                    <button class="context-tab-button" onclick="chavearAbaAdministrativa('cadastro')">Cadastrar usuário</button>
+                    <button class="context-tab-button" onclick="chavearAbaAdministrativa('cadastro')">Alterar cadastro</button>
+                    <button class="context-tab-button active" onclick="chavearAbaAdministrativa('disciplinas')">Controle Acadêmico</button>
+                `;
+                desenharTabelaDisciplinas();
+            } else if (tipo === 'turmas') {
+                document.getElementById('panelTurmas').classList.remove('hidden');
+                desenharTabelaTurmas();
+            }
+        }
+
+        function ocultarTodosSegmentosDOM() {
+            document.querySelectorAll('.view-segment').forEach(s => s.classList.add('hidden'));
+        }
+
+        /* =========================================================
+           4. LÓGICA E POLIMORFISMO DE CADASTROS (PÁG 3-6)
+           ========================================================= */
+        function alterarSubPerfilCadastro(perfil) {
+            perfilCadastroSelecionado = perfil;
+            document.querySelectorAll('#cadastrosSubTabs .sub-tab-pill').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.subclass-fields-block').forEach(b => b.classList.add('hidden'));
+
+            if (perfil === 'Administrador' || perfil === 'Financeiro' || perfil === 'Comercial') {
+                document.getElementById('rowAdminFields').classList.remove('hidden');
+            } else if (perfil === 'Docente') {
+                document.getElementById('rowDocenteFields').classList.remove('hidden');
+            } else if (perfil === 'Discente') {
+                document.getElementById('rowDiscenteFields').classList.remove('hidden');
+            } else if (perfil === 'Guardião') {
+                document.getElementById('rowGuardiaoFields').classList.remove('hidden');
+            }
+            logOOP(`Campos dinâmicos injetados para herança da subclasse: [${perfil}].`);
+        }
+
+        function submeterFormularioUsuario() {
+            const adminOperador = dbUsuarios[0]; // Ana (Administrador padrão que gerencia o sistema)
+            const nome = document.getElementById('usrNome').value;
+            const cpf = document.getElementById('usrCpf').value;
+            const nasc = document.getElementById('usrNasc').value;
+            const status = document.getElementById('usrStatus').value === 'true';
+            
+            let novoObj;
+            let idUnico = dbUsuarios.length + 1;
+            let matrStr = `${perfilCadastroSelecionado.substring(0,3).toUpperCase()}-${idUnico}`;
+
+            if(perfilCadastroSelecionado === 'Administrador') {
+                novoObj = new Administrador(idUnico, nome, cpf, nasc, matrStr, "123", status, document.getElementById('attrCargo').value);
+            } else {
+                novoObj = new Usuario(idUnico, nome, cpf, nasc, matrStr, "123", perfilCadastroSelecionado, status);
+            }
+
+            let respostaLog = adminOperador.cadastrarUsuario(dbUsuarios, novoObj);
+            logOOP(`${respostaLog}\nInstância gerada: ${novoObj.visualizarPerfil()}`);
+            alert(`Instância da classe ${perfilCadastroSelecionado} inserida com sucesso!`);
+        }
+
+        function acionarMetodoHerdado(metodo) {
+            const nome = document.getElementById('usrNome').value;
+            const mock = new Usuario(999, nome, "000", "2000-01-01", "MOCK-999", "123", perfilCadastroSelecionado, true);
+            logOOP(mock.visualizarPerfil());
+        }
+
+        /* =========================================================
+           5. GESTÃO DE DISCIPLINAS (PÁG 7, 8)
+           ========================================================= */
+        function desenharTabelaDisciplinas() {
+            const rowHeader = document.getElementById('panelDisciplinas').querySelector('.search-control-block');
+            rowHeader.innerHTML = `
+                <div style="display:flex; gap:6px;">
+                    <button class="sub-tab-pill active" onclick="chavearAbaAdministrativa('disciplinas')">Disciplinas</button>
+                    <button class="sub-tab-pill" onclick="chavearAbaAdministrativa('turmas')">Turmas</button>
+                    <button class="sub-tab-pill" onclick="alert('Módulo Cursos em análise estrutural.')">Cursos</button>
+                </div>
+                <input type="text" class="search-bar-input" placeholder="Pesquisar Disciplinas 🔍">
+            `;
+
+            const tbody = document.getElementById('tableDisciplinasRows');
+            tbody.innerHTML = '';
+            dbDisciplinas.forEach((d, index) => {
+                tbody.innerHTML += `<tr onclick="selecionarLinhaTabela(this, ${index})"><td>${d.cod}</td><td>${d.desc}</td><td>${d.status}</td></tr>`;
+            });
+        }
+
+        function adminCadastrarDisciplina() {
+            const cod = document.getElementById('formDiscCod').value;
+            const desc = document.getElementById('formDiscDesc').value;
+            const emen = document.getElementById('formDiscEmenta').value;
+
+            dbDisciplinas.push({ cod: cod, desc: desc, status: "ATIVO", ementa: emen });
+            logOOP(`[Metodo] cadastrarDisciplina() processado. Objeto persistido.`);
+            desenharTabelaDisciplinas();
+        }
+
+        function adminRemoverDisciplina() {
+            if(dbDisciplinas.length > 0) {
+                let removido = dbDisciplinas.pop();
+                logOOP(`[Metodo] removerDisciplina() acionado. Removido cod: ${removido.cod}`);
+                desenharTabelaDisciplinas();
+            }
+        }
+
+        function adminMudarStatusDisciplina(statusBooleano) {
+            if(dbDisciplinas.length > 0) {
+                dbDisciplinas[0].status = statusBooleano ? "ATIVO" : "INATIVO";
+                logOOP(`[Metodo] alteraçãoStatus() invocado. Novo estado: ${dbDisciplinas[0].status}`);
+                desenharTabelaDisciplinas();
+            }
+        }
+
+        /* =========================================================
+           6. GESTÃO DE TURMAS (PÁG 9, 10)
+           ========================================================= */
+        function desenharTabelaTurmas() {
+            const rowHeader = document.getElementById('panelTurmas').querySelector('.search-control-block');
+            rowHeader.innerHTML = `
+                <div style="display:flex; gap:6px;">
+                    <button class="sub-tab-pill" onclick="chavearAbaAdministrativa('disciplinas')">Disciplinas</button>
+                    <button class="sub-tab-pill active" onclick="chavearAbaAdministrativa('turmas')">Turmas</button>
+                    <button class="sub-tab-pill" onclick="alert('Módulo Cursos em análise estrutural.')">Cursos</button>
+                </div>
+            `;
+
+            const tbody = document.getElementById('tableTurmasRows');
+            tbody.innerHTML = '';
+            dbTurmas.forEach(t => {
+                tbody.innerHTML += `<tr><td>${t.cod}</td><td>${t.curso}</td><td>${t.semestre}</td><td>${t.qtd}</td><td>${t.status}</td></tr>`;
+            });
+        }
+
+        function adminCriarTurma() {
+            const curso = document.getElementById('formTurmaCurso').value;
+            const sem = document.getElementById('formTurmaSemestre').value;
+            
+            dbTurmas.push({ cod: "00" + (dbTurmas.length + 1), curso: curso, semestre: sem, qtd: 0, status: "ABERTA" });
+            logOOP(`[Metodo] criarTurma() executado para o curso [${curso}].`);
+            desenharTabelaTurmas();
+        }
+
+        function adminFecharTurma() {
+            if(dbTurmas.length > 0) {
+                dbTurmas[dbTurmas.length - 1].status = "FECHADA";
+                logOOP(`[Metodo] fecharTurma() acionado com sucesso.`);
+                desenharTabelaTurmas();
+            }
+        }
+
+        /* =========================================================
+           7. FEED E ENGENHARIA DE LOGS COM COMPLEMENTOS
+           ========================================================= */
+        function desenharFeedComercial() {
+            const target = document.getElementById('domFeedList');
+            target.innerHTML = '';
+            dbFeed.forEach(f => {
+                target.innerHTML += `
+                    <div class="news-card-item">
+                        <div class="news-image-mock"><b>Imagem</b></div>
+                        <div class="news-body-text">${f.texto}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function execDocenteLancar(tipo) {
+            const nota = document.getElementById('docNota').value;
+            const faltas = document.getElementById('docFaltas').value;
+            if(tipo === 'nota') logOOP(`[Docente] lançarNotas() invocado com valor: ${nota}`);
+            if(tipo === 'frequencia') logOOP(`[Docente] lançarFrequencia() invocado. Faltas acrescidas: ${faltas}`);
+            alert("Informação gravada na folha do diário escolar de forma permanente!");
+        }
+
+        function selecionarLinhaTabela(el, index) {
+            document.querySelectorAll('.app-data-table tr').forEach(r => r.classList.remove('selected-row'));
+            el.classList.add('selected-row');
+            logOOP(`Linha selecionada: [Código ${dbDisciplinas[index].cod}] - Ementa: ${dbDisciplinas[index].ementa}`);
+        }
+
+        function logOOP(msg) {
+            const term = document.getElementById('termLogger');
+            term.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}<br>` + term.innerHTML;
+        }
+    </script>
+</body>
+</html>
