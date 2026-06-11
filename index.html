@@ -34,7 +34,7 @@
                 <li><button class="sidebar-link active" id="menuAdmin" onclick="redirecionarContexto('Administração')">Administração</button></li>
                 <li><button class="sidebar-link" id="menuDocente" onclick="redirecionarContexto('Docente')">Docente</button></li>
                 <li><button class="sidebar-link" id="menuDiscente" onclick="redirecionarContexto('Discente')">Discente</button></li>
-                <li><button class="sidebar-link" id="menuGuardiao" onclick="redirecionarContexto('Guardião')">Responsável</button></li>
+                <li><button class="sidebar-link" id="menuResponsavel" onclick="redirecionarContexto('Responsavel')">Responsável</button></li>
 
             </ul>
         </div>
@@ -102,13 +102,67 @@
                 </div> <!-- Fecha painel de cadastros -->
 
 
+<!-- TELA DE DOCENTE-->
+            
+            <div id="painelDocente" class="view-segment hidden">
+                <div class="app-card-layout" style="margin-top: 20px;"> <!--Abre caixas de listagens gerenciais -->
+                        <h2>Adicionar notas</h2>
+                        <div class="ui-divider"></div>
 
-                
+                        <div class="menu-links-grid">
+                            <a href="formnota.php" class="menu-link-btn">Notas de Alunos</a>
+                            
+                        </div>
+                        
+                </div> <!--Fecha caixas de listagens gerenciais-->
+
+                <div class="app-card-layout" style="margin-top: 20px;"> <!--Abre caixas de listagens gerenciais -->
+                    <h2>Visualizar notas</h2>
+                    <div class="ui-divider"></div>
+
+                    <div class="menu-links-grid">
+                        <a href="formlistnotas.php" class="menu-link-btn">Notas de Alunos</a>
+                        
+                    </div>
+                    
+                </div> <!--Fecha caixas de listagens gerenciais-->
+            </div> <!--fecha painel de docente-->
+
+<!-- Painel Discente -->
 
 
+            <div id="painelDiscente" class="view-segment hidden">
+                <div class="app-card-layout">
+                    <h2>Área do Discente</h2>
+                    <div class="ui-divider"></div>
+                </div>
+            </div>
+
+<!-- Painel Responsável -->
+            <div id="painelResponsavel" class="view-segment hidden">
+                <div class="app-card-layout">
+                    <h2>Área do Responsável</h2>
+                    <div class="ui-divider"></div>
+                </div>
+            </div>
 
                 </div>  <!--Tela de fundo -->
             </div> <!--Espaço maior de fundo -->
+
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
 
               
     </div> <!--fundo branco -->

@@ -13,10 +13,10 @@
 // =============================================
 // Configurações de conexão com o banco
 // =============================================
-$host     = "localhost";
-$usuario  = "root";
-$senha_bd = "";
-$bd       = "escola";
+$host = "sql213.infinityfree.com";
+$usuario = "if0_41127589";
+$senha_bd = "0201030Aa";
+$bd = "if0_41127589_connectschool";
 
 // =============================================
 // Conexão com o banco de dados

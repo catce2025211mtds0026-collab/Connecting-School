@@ -262,6 +262,22 @@ body {
     gap: 20px;
 }
 
+#painelDocente{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#painelDiscente{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#painelGuardiao {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 
 /* LINHA DE DIVISÃO CINZA */
@@ -282,6 +298,7 @@ body {
     align-items: left;
     flex-direction: column;
 }
+
 
 .form-row-item label {
     width: 130px;

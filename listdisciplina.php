@@ -13,10 +13,10 @@
 // =============================================
 // Configurações de conexão com o banco
 // =============================================
-$host     = "localhost";
-$usuario  = "root";
-$senha_bd = "";
-$bd       = "escola";
+$host = "sql213.infinityfree.com";
+$usuario = "if0_41127589";
+$senha_bd = "0201030Aa";
+$bd = "if0_41127589_connectschool";
 
 // =============================================
 // Conexão com o banco de dados
@@ -30,7 +30,7 @@ if ($conexao->connect_error) {
 // =============================================
 // Consulta na tabela disciplina
 // =============================================
-$comando   = "SELECT id, nome, status FROM disciplina";
+$comando   = "SELECT id_disciplina, nome_disciplina, status_disciplina FROM disciplina";
 $resultado = mysqli_query($conexao, $comando);
 
 if (!$resultado) {
@@ -53,14 +53,14 @@ if ($qtdeRegistros == 0) {
             </tr>";
 
     while ($campo = mysqli_fetch_array($resultado)) {
-        $id     = $campo["id"];
-        $nome   = $campo["nome"];
-        $status = $campo["status"] ? "Ativa" : "Inativa";
+        $id_disciplina     = $campo["id_disciplina"];
+        $nome_disciplina   = $campo["nome_disciplina"];
+        $status_disciplina = $campo["status_disciplina"] ? "Ativa" : "Inativa";
 
         echo "<tr>
-                <td>$id</td>
-                <td>$nome</td>
-                <td>$status</td>
+                <td>$id_disciplina</td>
+                <td>$nome_disciplina</td>
+                <td>$status_disciplina</td>
               </tr>";
     }
 

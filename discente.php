@@ -20,10 +20,10 @@ $ano_letivo      = trim($_POST["ano_letivo"]);
 
 $comando  = "INSERT INTO discente (id, nome, cpf, data_nascimento, senha, status, grau_regular, ano_letivo) ";
 $comando .= "VALUES ('$id', '$nome', '$cpf', '$data_nascimento', '$senha', '$status', '$grau_regular', '$ano_letivo')";
-$host = "localhost";
-$usuario = "root";
-$senha_bd = "";
-$bd = "escola";
+$host = "sql213.infinityfree.com";
+$usuario = "if0_41127589";
+$senha_bd = "0201030Aa";
+$bd = "if0_41127589_connectschool";
 // echo("$comando<br/>");
 $conexao = new mysqli($host, $usuario, $senha_bd, $bd);
 if (!$conexao) {

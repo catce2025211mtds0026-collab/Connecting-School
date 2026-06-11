@@ -8,17 +8,17 @@
 <h2>Disciplina</h2>
 <?php
 
-$id              = trim($_POST["id"]);
-$nome            = trim($_POST["nome"]);
-$status          = trim($_POST["status"]) === "true" ? 1 : 0;
+$id_disciplina              = trim($_POST["id_disciplina"]);
+$nome_disciplina            = trim($_POST["nome_disciplina"]);
+$status_disciplina          = trim($_POST["status_disciplina"]) === "true" ? 1 : 0;
 
 
-$comando  = "INSERT INTO disciplina (id, nome, status) ";
-$comando .= "VALUES ('$id', '$nome', '$status')";
-$host = "localhost";
-$usuario = "root";
-$senha_bd = "";
-$bd = "escola";
+$comando  = "INSERT INTO disciplina (id_disciplina, nome_disciplina, status_disciplina) ";
+$comando .= "VALUES ('$id_disciplina', '$nome_disciplina', '$status_disciplina')";
+$host = "sql213.infinityfree.com";
+$usuario = "if0_41127589";
+$senha_bd = "0201030Aa";
+$bd = "if0_41127589_connectschool";
 // echo("$comando<br/>");
 $conexao = new mysqli($host, $usuario, $senha_bd, $bd);
 if (!$conexao) {

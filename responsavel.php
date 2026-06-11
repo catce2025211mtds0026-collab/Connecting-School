@@ -19,10 +19,10 @@ $telefone2 = trim($_POST["telefone2"]);
 
 $comando  = "INSERT INTO responsavel (id, nome, cpf, data_nascimento, senha, status, telefone1, telefone2) ";
 $comando .= "VALUES ('$id', '$nome', '$cpf', '$data_nascimento', '$senha', '$status', '$telefone1', '$telefone2')";
-$host = "localhost";
-$usuario = "root";
-$senha_bd = "";
-$bd = "escola";
+$host = "sql213.infinityfree.com";
+$usuario = "if0_41127589";
+$senha_bd = "0201030Aa";
+$bd = "if0_41127589_connectschool";
 // echo("$comando<br/>");
 $conexao = new mysqli($host, $usuario, $senha_bd, $bd);
 if (!$conexao) {

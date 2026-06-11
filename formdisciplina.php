@@ -11,10 +11,10 @@ echo('
 <h2>Inclusão de Disciplina</h2>
 <form method="post" name="formulario" action="disciplina.php">
 
-    Código - ID (*): <input type="text" name="id" required><br/>
-    Nome da Disciplina (*): <input type="text" name="nome" size="50" maxlength="150" required><br/>
+    Código - ID (*): <input type="text" name="id_disciplina" required><br/>
+    Nome da Disciplina (*): <input type="text" name="nome_disciplina" size="50" maxlength="150" required><br/>
     Status:
-        <select name="status">
+        <select name="status_disciplina">
             <option value="1">Ativa</option>
             <option value="0">Inativa</option>
         </select><br/>

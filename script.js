@@ -26,8 +26,8 @@ function alterarSubPerfilCadastro(perfil) {
         document.getElementById('rowDocenteFields').classList.remove('hidden');
     } else if (perfil === 'Discente') {
         document.getElementById('rowDiscenteFields').classList.remove('hidden');
-    } else if (perfil === 'Guardião') {
-        document.getElementById('rowGuardiaoFields').classList.remove('hidden');
+    } else if (perfil === 'Responsavel') {
+        document.getElementById('rowResponsavelFields').classList.remove('hidden');
     }
     logOOP(`Campos dinâmicos injetados para herança da subclasse: [${perfil}].`);
 }
@@ -37,25 +37,23 @@ function alterarSubPerfilCadastro(perfil) {
 const modulosConfig = {
     'Administração': {
         abas: [
-            { painel: 'painelCadastros'  },
-            { painel: 'panelDisciplinas' },
-            { painel: 'panelTurmas'      },
+            { painel: 'painelCadastros', label: 'Cadastros' },
         ]
     },
     'Docente': {
         abas: [
-            { painel: 'panelTurmas'      },
-            { painel: 'panelDisciplinas' },
+            { painel: 'painelDocente', label: 'Área Docente' },
+            
         ]
     },
     'Discente': {
         abas: [
-            { painel: 'panelTurmas' },
+            { painel: 'painelDiscente', label: 'Área Discente' },
         ]
     },
-    'Guardião': {
+    'Responsavel': {
         abas: [
-            { painel: 'panelTurmas' },
+            { painel: 'painelResponsavel', label: 'Área do Responsável' },
         ]
     },
 };
@@ -77,7 +75,7 @@ function redirecionarContexto(contexto) {
         'Administração': 'menuAdmin',
         'Docente':       'menuDocente',
         'Discente':      'menuDiscente',
-        'Guardião':      'menuGuardiao',
+        'Responsavel':    'menuResponsavel',
     };
 
     const btnAtivo = document.getElementById(idMap[contexto]);
@@ -104,6 +102,11 @@ function redirecionarContexto(contexto) {
 
         tabsBar.appendChild(pill);
     });
+
+
+
+// Exibir o menu correspondente
+document.getElementById(menuId).style.display = 'block';
 
     // 3. Reativa a última aba visitada neste contexto (ou a primeira)
     const ultimaAba = abaAtualPorContexto[contexto] ?? 0;
